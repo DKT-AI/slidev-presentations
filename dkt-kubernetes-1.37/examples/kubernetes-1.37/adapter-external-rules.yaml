@@ -1,0 +1,8 @@
+# Adapter configuration fragment, not a Kubernetes resource manifest.
+externalRules:
+  - seriesQuery: '{__name__="queue_consumer_lag",name!=""}'
+    metricsQuery: sum(<<.Series>>{<<.LabelMatchers>>}) by (name)
+    resources:
+      overrides:
+        namespace:
+          resource: namespace

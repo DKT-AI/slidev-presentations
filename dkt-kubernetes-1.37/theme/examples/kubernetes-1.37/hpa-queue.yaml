@@ -1,0 +1,24 @@
+# Teaching example: requires a configured external metrics pipeline.
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: queue-worker
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: queue-worker
+  minReplicas: 0
+  maxReplicas: 10
+  metrics:
+    - type: External
+      external:
+        metric:
+          name: queue_consumer_lag
+          selector:
+            matchLabels:
+              name: worker_tasks
+        target:
+          type: AverageValue
+          averageValue: "30"
